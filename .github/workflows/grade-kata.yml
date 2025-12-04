@@ -1,0 +1,573 @@
+name: Grade Kata
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'main'
+    paths:
+      - 'katas/**'  # Solo ejecutar cuando hay cambios en carpetas de katas
+
+permissions:
+  contents: write
+  pull-requests: write
+  statuses: write
+  issues: write
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if katas exist
+        id: check
+        run: |
+          # Verificar si existe alguna kata en el directorio katas/
+          if [ -d "katas" ] && [ "$(ls -A katas 2>/dev/null)" ]; then
+            echo "✅ Katas directory exists and is not empty"
+            echo "has_katas=true" >> $GITHUB_OUTPUT
+          else
+            echo "⏭️  Katas directory is empty or doesn't exist - skipping workflow"
+            echo "💡 This is normal for the initial commit from template"
+            echo "has_katas=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+      - name: Setup .NET
+        if: steps.check.outputs.has_katas == 'true'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Get current kata
+        if: steps.check.outputs.has_katas == 'true'
+        id: kata
+        run: |
+          CURRENT=$(jq -r '.current_kata' .github/progress.json)
+          echo "number=$CURRENT" >> $GITHUB_OUTPUT
+          echo "🎯 Working on Kata $CURRENT"
+
+      - name: Set commit status to pending
+        if: steps.check.outputs.has_katas == 'true'
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }}" \
+            -d '{
+              "state": "pending",
+              "description": "🧪 Running TDD tests...",
+              "context": "kata-tests"
+            }'
+
+      - name: Run tests
+        if: steps.check.outputs.has_katas == 'true'
+        id: test
+        run: |
+          KATA_NUM=${{ steps.kata.outputs.number }}
+          echo "🎯 Testing Kata $KATA_NUM with server tests..."
+          
+          # Verificar que existe la kata actual
+          if [ ! -d "katas/kata-$KATA_NUM" ]; then
+            echo "❌ Kata $KATA_NUM directory not found"
+            echo "result=failure" >> $GITHUB_OUTPUT
+            echo "error_message=Kata directory not found" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          # 🔒 DESCARGAR SERVER TESTS desde el template (seguridad)
+          # Los server tests NO están en el repo del estudiante para prevenir que vean las pruebas
+          echo "🔐 Descargando server tests desde template..."
+          
+          TEMPLATE_REPO="SincosoftSAS/tdd-katas-progressive-template"
+          SERVER_TESTS_URL="https://raw.githubusercontent.com/$TEMPLATE_REPO/master/.github/server-tests/kata-$KATA_NUM/ServerTests.cs"
+          
+          mkdir -p ".github/server-tests/kata-$KATA_NUM"
+          
+          if ! curl -f -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -o ".github/server-tests/kata-$KATA_NUM/ServerTests.cs" \
+               "$SERVER_TESTS_URL" 2>/dev/null; then
+            echo "❌ Could not download server tests for kata-$KATA_NUM"
+            echo "result=failure" >> $GITHUB_OUTPUT
+            echo "error_message=Server tests not found in template" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          echo "✅ Server tests downloaded successfully"
+          
+          cd "katas/kata-$KATA_NUM"
+          
+          echo "🔨 Building student solution..."
+          if ! dotnet build --verbosity quiet > ../../build-output.txt 2>&1; then
+            echo "❌ Build failed"
+            echo "result=failure" >> $GITHUB_OUTPUT
+            echo "error_message=Build failed" >> $GITHUB_OUTPUT
+            echo ""
+            echo "📋 Build Error Details:"
+            cat ../../build-output.txt
+            exit 1
+          fi
+          
+          echo "🧪 Running student tests (quick check)..."
+          dotnet test --verbosity quiet --logger "console;verbosity=minimal" || echo "ℹ️ Student tests may fail (TDD process)"
+          
+          echo ""
+          echo "🔍 Running SERVER TESTS (comprehensive evaluation)..."
+          
+          # Crear directorio temporal para las pruebas del servidor
+          cd ../../
+          mkdir -p temp-server-tests
+          
+          # Copiar TODA la estructura del proyecto del estudiante
+          cp -r "katas/kata-$KATA_NUM" "temp-server-tests/"
+          
+          cd "temp-server-tests/kata-$KATA_NUM"
+          
+          echo "📋 Original test files:"
+          find . -name "*Tests.cs" -o -name "*Test.cs" | head -5
+          
+          # AGREGAR los archivos de server tests al proyecto como archivos adicionales
+          # Esto permite ejecutar tanto los tests del estudiante como los del servidor
+          
+          SERVER_TEST_FILE="../../.github/server-tests/kata-$KATA_NUM/ServerTests.cs"
+          if [ -f "$SERVER_TEST_FILE" ]; then
+            echo "🔄 Adding comprehensive server tests to project..."
+            
+            # Encontrar el directorio de tests del proyecto
+            TEST_DIR=$(find . -name "*.Tests" -type d | head -1)
+            if [ -n "$TEST_DIR" ]; then
+              echo "  📁 Found test directory: $TEST_DIR"
+              # Copiar el archivo de server tests al directorio de tests
+              cp "$SERVER_TEST_FILE" "$TEST_DIR/ServerTests.cs"
+              echo "  📝 Added ServerTests.cs with comprehensive server tests"
+            else
+              echo "  ❌ Could not find test directory"
+              echo "result=failure" >> $GITHUB_OUTPUT
+              echo "error_message=Test directory not found" >> $GITHUB_OUTPUT
+              cd ../../
+              rm -rf temp-server-tests
+              exit 1
+            fi
+          else
+            echo "  ❌ Server test file not found: $SERVER_TEST_FILE"
+            echo "result=failure" >> $GITHUB_OUTPUT
+            echo "error_message=Server tests not found" >> $GITHUB_OUTPUT
+            cd ../../
+            rm -rf temp-server-tests
+            exit 1
+          fi
+          
+          echo ""
+          echo "📋 After adding server tests - test files content:"
+          find . -name "*Tests.cs" -not -path "*/obj/*" -not -path "*/bin/*" | while read testfile; do
+            # Saltar archivos de template vacíos como UnitTest1.cs
+            if [[ "$(basename "$testfile")" == "UnitTest1.cs" ]]; then
+              echo "📄 $testfile: (skipping default template file)"
+              continue
+            fi
+            
+            echo "📄 $testfile:"
+            # Contar tanto [Fact] (xUnit) como [TestMethod] (MSTest) para compatibilidad
+            FACT_COUNT=$(grep -c "\[Fact\]" "$testfile" 2>/dev/null || echo "0")
+            TESTMETHOD_COUNT=$(grep -c "\[TestMethod\]" "$testfile" 2>/dev/null || echo "0")
+            
+            # Asegurar que son números válidos
+            if ! [[ "$FACT_COUNT" =~ ^[0-9]+$ ]]; then
+              FACT_COUNT=0
+            fi
+            if ! [[ "$TESTMETHOD_COUNT" =~ ^[0-9]+$ ]]; then
+              TESTMETHOD_COUNT=0
+            fi
+            
+            TOTAL_TESTS=$((FACT_COUNT + TESTMETHOD_COUNT))
+            echo "  xUnit [Fact] tests: $FACT_COUNT"
+            echo "  MSTest [TestMethod] tests: $TESTMETHOD_COUNT" 
+            echo "  Total test methods: $TOTAL_TESTS"
+          done
+          
+          echo ""
+          echo "🔨 Building with server tests..."
+          if ! dotnet build --verbosity normal > ../../server-build-output.txt 2>&1; then
+            echo "❌ Build with server tests failed"
+            echo "result=failure" >> $GITHUB_OUTPUT
+            echo "error_message=Server build failed" >> $GITHUB_OUTPUT
+            echo ""
+            echo "📋 Server Build Error Details:"
+            cat ../../server-build-output.txt
+            cd ../../
+            rm -rf temp-server-tests
+            exit 1
+          fi
+          
+          echo ""
+          echo "🧪 Executing SERVER TESTS..."
+          # Ejecutar las pruebas del servidor (ahora incluidas como archivo adicional)
+          if dotnet test --verbosity normal --logger "console;verbosity=detailed" > ../../server-test-output.txt 2>&1; then
+            echo "✅ ALL SERVER TESTS PASSED! Kata $KATA_NUM completed successfully"
+            echo "result=success" >> $GITHUB_OUTPUT
+            
+            # Mostrar resumen completo
+            echo ""
+            echo "📊 Complete Test Results Summary:"
+            cat ../../server-test-output.txt | grep -E "(Passed|Failed|Skipped|Total)" || echo "Could not parse results"
+            
+            # Contar tests ejecutados
+            TOTAL_TESTS=$(cat ../../server-test-output.txt | grep -o "Passed.*" | wc -l)
+            echo ""
+            echo "🎯 Total server tests executed: $TOTAL_TESTS"
+            
+          else
+            echo "❌ SERVER TESTS FAILED - Kata $KATA_NUM not yet complete"
+            echo "result=failure" >> $GITHUB_OUTPUT
+
+            echo ""
+            echo "📋 Detailed server test failure report:"
+            cat ../../server-test-output.txt
+
+            echo ""
+            echo "🔍 Extracting specific failed test information..."
+
+            # Extraer información de tests fallidos con nombres y errores específicos
+            echo "📋 Processing test failures..."
+
+            # Crear archivo temporal con toda la información de fallos
+            cat ../../server-test-output.txt > ../../full-test-output.txt
+
+            # Inicializar archivo de fallos
+            echo "" > ../../structured-failures.txt
+
+            # Extraer tests fallidos usando un enfoque más directo
+            echo "🔍 Searching for failed tests..."
+
+            # Buscar líneas que contienen FAIL o Failed y extraer nombres de tests
+            grep -E "FAIL|Failed" ../../full-test-output.txt | while IFS= read -r line; do
+              echo "Processing line: $line" >&2
+              
+              # Extraer nombre del test de diferentes patrones
+              if [[ "$line" =~ ServerTests\.([A-Za-z_][A-Za-z0-9_]*) ]]; then
+                # Patrón: FAIL ServerTests.Generate_WithOne_ReturnsListWithOne
+                RAW_NAME=$(echo "$line" | grep -o 'ServerTests\.[A-Za-z_][A-Za-z0-9_]*' | sed 's/ServerTests\.//')
+                CLEAN_NAME=$(echo "$RAW_NAME" | sed 's/_/ /g')
+                echo "❌ $CLEAN_NAME" >> ../../structured-failures.txt
+                echo "Found test: $CLEAN_NAME" >&2
+              elif [[ "$line" =~ Tests\.([A-Za-z_][A-Za-z0-9_]*) ]]; then
+                # Patrón: FAIL FizzBuzz.Tests.Generate_WithOne_ReturnsListWithOne
+                RAW_NAME=$(echo "$line" | grep -o 'Tests\.[A-Za-z_][A-Za-z0-9_]*' | sed 's/Tests\.//')
+                CLEAN_NAME=$(echo "$RAW_NAME" | sed 's/_/ /g')
+                echo "❌ $CLEAN_NAME" >> ../../structured-failures.txt
+                echo "Found test: $CLEAN_NAME" >&2
+              elif [[ "$line" =~ Failed\ ([A-Za-z_][A-Za-z0-9_]*) ]]; then
+                # Patrón: Failed Generate_WithOne_ReturnsListWithOne
+                RAW_NAME=$(echo "$line" | grep -o 'Failed [A-Za-z_][A-Za-z0-9_]*' | sed 's/Failed //')
+                CLEAN_NAME=$(echo "$RAW_NAME" | sed 's/_/ /g')
+                echo "❌ $CLEAN_NAME" >> ../../structured-failures.txt
+                echo "Found test: $CLEAN_NAME" >&2
+              fi
+            done
+            
+            # Verificar si encontramos tests fallidos
+            if [ -f "../../structured-failures.txt" ] && [ -s "../../structured-failures.txt" ]; then
+              # Limpiar y deduplicar
+              sort -u ../../structured-failures.txt > ../../failed-test-details.txt
+              FOUND_TESTS=$(cat ../../failed-test-details.txt)
+              echo "📝 Failed tests identified:"
+              echo "$FOUND_TESTS"
+            else
+              echo "⚠️ No failed tests found with structured approach, trying alternative..."
+              
+              # Método alternativo: buscar cualquier línea con "FAIL" y extraer lo que sigue
+              grep -o "FAIL.*" ../../full-test-output.txt | head -10 | while IFS= read -r fail_line; do
+                # Extraer la parte más probable del nombre del test
+                if [[ "$fail_line" =~ ([A-Za-z_][A-Za-z0-9_]{5,}) ]]; then
+                  RAW_NAME="${BASH_REMATCH[1]}"
+                  CLEAN_NAME=$(echo "$RAW_NAME" | sed 's/_/ /g')
+                  echo "❌ $CLEAN_NAME" >> ../../failed-test-details.txt
+                fi
+              done
+              
+              if [ ! -f "../../failed-test-details.txt" ] || [ ! -s "../../failed-test-details.txt" ]; then
+                echo "❌ Algunas pruebas fallaron (ejecuta 'dotnet test' localmente para ver detalles)" > ../../failed-test-details.txt
+              fi
+            fi
+            
+            echo ""
+            echo "💡 Keep implementing using TDD until all functionality is complete!"
+            echo "📝 Server tests are comprehensive and test ALL required features."
+
+            # Guardar la información de tests fallidos en el output del step
+            if [ -f "../../failed-test-details.txt" ]; then
+              FAILED_TESTS_CONTENT=$(cat ../../failed-test-details.txt)
+              # Usar delimitador EOF para contenido multilínea
+              echo "failed_tests_details<<EOF" >> $GITHUB_OUTPUT
+              echo "$FAILED_TESTS_CONTENT" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+
+              # También imprimir en formato especial para que el webhook pueda extraerlo
+              echo ""
+              echo "::group::📝 Failed tests identified:"
+              echo "$FAILED_TESTS_CONTENT"
+              echo "::endgroup::"
+
+              # Guardar en el job summary para que sea accesible desde la API
+              echo "## 📝 Failed Tests" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "$FAILED_TESTS_CONTENT" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "failed_tests_details=❌ No se pudieron extraer detalles de tests fallidos" >> $GITHUB_OUTPUT
+            fi
+
+            # Limpiar y salir con error
+            cd ../../
+            rm -rf temp-server-tests
+            exit 1
+          fi
+          
+          # Limpiar (solo si fue exitoso)
+          cd ../../
+          rm -rf temp-server-tests
+
+      - name: Update progress on success
+        if: steps.check.outputs.has_katas == 'true' && steps.test.outputs.result == 'success'
+        run: |
+          CURRENT=${{ steps.kata.outputs.number }}
+          NEXT=$((CURRENT + 1))
+          
+          # Update progress.json
+          jq ".current_kata = $NEXT | .completed_katas += [$CURRENT] | .last_updated = \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"" .github/progress.json > temp.json
+          mv temp.json .github/progress.json
+          
+          # Commit changes
+          git config user.name "TDD Bot"
+          git config user.email "tdd-bot@github.com"
+          git add .github/progress.json
+          git commit -m "Complete Kata $CURRENT" || true
+          git push origin ${{ github.ref_name }}
+          
+          echo "📊 Progress updated: Kata $CURRENT → Kata $NEXT"
+
+      - name: Close resolved issues
+        if: steps.check.outputs.has_katas == 'true' && steps.test.outputs.result == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          KATA_NUM=${{ steps.kata.outputs.number }}
+          echo "🔍 Buscando issues abiertos para Kata $KATA_NUM..."
+          
+          # Buscar y cerrar todos los issues abiertos relacionados con esta kata
+          ISSUE_NUMBERS=$(gh issue list --repo ${{ github.repository }} \
+            --state open \
+            --search "Kata $KATA_NUM in:title" \
+            --json number \
+            --jq '.[].number' 2>/dev/null || echo "")
+          
+          if [ -n "$ISSUE_NUMBERS" ]; then
+            echo "✅ Cerrando issues resueltos..."
+            echo "$ISSUE_NUMBERS" | while read -r issue_num; do
+              if [ -n "$issue_num" ]; then
+                echo "Cerrando issue #$issue_num..."
+                gh issue close "$issue_num" \
+                  --repo ${{ github.repository }} \
+                  --comment "✅ **Problema Resuelto** - Todas las pruebas ahora pasan correctamente."$'\n\n'"🎉 **¡Excelente trabajo!** Has completado exitosamente la Kata $KATA_NUM."$'\n\n'"📈 **Siguiente paso:** Continúa con la siguiente kata para seguir mejorando tus habilidades de TDD." \
+                  2>/dev/null || echo "⚠️ No se pudo cerrar issue #$issue_num"
+              fi
+            done
+            echo "✨ Issues cerrados exitosamente"
+          else
+            echo "ℹ️ No hay issues abiertos para cerrar"
+          fi
+
+      - name: Unlock next kata
+        if: steps.check.outputs.has_katas == 'true' && steps.test.outputs.result == 'success'
+        run: |
+          CURRENT=${{ steps.kata.outputs.number }}
+          NEXT=$((CURRENT + 1))
+          
+          if [ -d ".github/kata-templates/kata-$NEXT" ] && [ ! -d "katas/kata-$NEXT" ]; then
+            echo "🔓 Unlocking Kata $NEXT..."
+            
+            # Copy template to working directory
+            cp -r ".github/kata-templates/kata-$NEXT" "katas/"
+            
+            # Commit new kata
+            git add "katas/kata-$NEXT"
+            git commit -m "Unlock Kata $NEXT" || true
+            git push origin ${{ github.ref_name }}
+            
+            echo "✅ Kata $NEXT unlocked!"
+          else
+            echo "🏆 All katas completed or next kata already exists!"
+          fi
+
+      - name: Close old issues from previous katas
+        if: steps.check.outputs.has_katas == 'true' && steps.test.outputs.result == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CURRENT=${{ steps.kata.outputs.number }}
+          echo "🧹 Limpiando issues antiguos de katas anteriores..."
+          
+          # Cerrar issues de katas anteriores (1 a CURRENT-1)
+          for prev_kata in $(seq 1 $((CURRENT - 1))); do
+            echo "Buscando issues de Kata $prev_kata..."
+            
+            PREV_ISSUES=$(gh issue list --repo ${{ github.repository }} \
+              --state open \
+              --search "Kata $prev_kata in:title" \
+              --json number \
+              --jq '.[].number' 2>/dev/null || echo "")
+            
+            if [ -n "$PREV_ISSUES" ]; then
+              echo "$PREV_ISSUES" | while read -r issue_num; do
+                if [ -n "$issue_num" ]; then
+                  echo "Cerrando issue antiguo #$issue_num de Kata $prev_kata..."
+                  gh issue close "$issue_num" \
+                    --repo ${{ github.repository }} \
+                    --comment "📈 **Kata Superada** - Has avanzado exitosamente a la Kata $CURRENT."$'\n\n'"Este issue se cierra automáticamente ya que pertenece a una kata anterior que ya completaste."$'\n\n'"¡Sigue adelante con tu aprendizaje de TDD! 🚀" \
+                    2>/dev/null || echo "⚠️ No se pudo cerrar issue #$issue_num"
+                fi
+              done
+            fi
+          done
+          
+          echo "✨ Limpieza de issues completada"
+
+      - name: Set final commit status
+        if: always() && steps.check.outputs.has_katas == 'true'
+        run: |
+          if [ "${{ steps.test.outputs.result }}" == "success" ]; then
+            STATE="success"
+            DESC="✅ Tests passed! Kata ${{ steps.kata.outputs.number }} completed"
+          else
+            STATE="failure"  
+            DESC="❌ Tests failed - check logs for details"
+          fi
+          
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }}" \
+            -d "{
+              \"state\": \"$STATE\",
+              \"description\": \"$DESC\",
+              \"context\": \"kata-tests\",
+              \"target_url\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+            }"
+
+      - name: Create failure issue
+        if: steps.check.outputs.has_katas == 'true' && steps.test.outputs.result == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          KATA_NUM=${{ steps.kata.outputs.number }}
+          ERROR_MSG="${{ steps.test.outputs.error_message }}"
+          
+          # Verificar configuración de GitHub CLI
+          echo "🔍 Checking GitHub CLI configuration..."
+          gh --version
+          gh auth status || echo "Auth status check failed"
+          echo "Repository: ${{ github.repository }}"
+          echo "Actor: ${{ github.actor }}"
+          
+          # Función para crear issue con manejo robusto de errores
+          create_issue_safe() {
+            local title="$1"
+            local body="$2"
+            
+            echo "Creating issue: $title"
+            echo "Body preview: ${body:0:100}..."
+            
+            # Escapar caracteres especiales en el título y cuerpo
+            local safe_title=$(echo "$title" | sed 's/"/\\"/g')
+            local safe_body=$(echo "$body" | sed 's/"/\\"/g' | tr '\n' ' ')
+            
+            # Intentar crear issue paso a paso para debugging
+            echo "Attempting to create issue with gh CLI..."
+            
+            # Primer intento: con asignación (sin labels problemáticos)
+            if gh issue create \
+              --title "$safe_title" \
+              --body "$safe_body" \
+              --assignee "${{ github.actor }}" 2>&1; then
+              echo "✅ Issue created and assigned successfully"
+              return 0
+            fi
+            
+            echo "Assignment failed, trying without assignee..."
+            
+            # Segundo intento: sin asignación
+            if gh issue create \
+              --title "$safe_title" \
+              --body "$safe_body" 2>&1; then
+              echo "✅ Issue created successfully (without assignee)"
+              return 0
+            fi
+            
+            echo "Both attempts failed, trying with minimal content..."
+            
+            # Tercer intento: versión simplificada
+            if gh issue create \
+              --title "Kata $KATA_NUM: Pruebas Fallaron" \
+              --body "Las pruebas fallaron. Ejecuta 'dotnet test' en katas/kata-$KATA_NUM para ver los detalles específicos de los errores y continúa con la implementación TDD." 2>&1; then
+              echo "✅ Minimal issue created successfully"
+              return 0
+            fi
+            
+            echo "❌ All attempts to create issue failed"
+            return 1
+          }
+          
+          # Crear issue específico basado en el tipo de error
+          if [[ "$ERROR_MSG" == *"Build failed"* ]]; then
+            ISSUE_BODY="🔨 **Error de Compilación** - Tu código no compila."$'\n\n'"**Pasos a seguir:**"$'\n'"1. Ejecuta \`dotnet build\` en \`katas/kata-$KATA_NUM\` para ver los errores de compilación"$'\n'"2. Corrige los errores de compilación en tu código"$'\n'"3. Haz commit y push de tus cambios para reintentar"
+            create_issue_safe "🔨 Kata $KATA_NUM: Error de Compilación" "$ISSUE_BODY"
+              
+          elif [[ "$ERROR_MSG" == *"Server build failed"* ]]; then
+            ISSUE_BODY="⚙️ **Error de Integración del Servidor** - Tu código compila pero hay un problema con la integración de las pruebas del servidor."$'\n\n'"**Posibles Causas:**"$'\n'"- Error en el namespace"$'\n'"- El nombre de la clase no coincide con el formato esperado"$'\n'"- Faltan modificadores de acceso público"$'\n\n'"**Pasos a seguir:**"$'\n'"1. Verifica que tus namespaces y nombres de clase coincidan con el formato esperado"$'\n'"2. Asegúrate de que tus clases principales sean públicas"$'\n'"3. Haz commit y push de tus cambios para reintentar"
+            create_issue_safe "⚙️ Kata $KATA_NUM: Error de Integración" "$ISSUE_BODY"
+              
+          else
+            # Server tests failed - crear issue con detalles
+            echo "Creating detailed test failure issue..."
+            
+            # Extraer mensajes de error específicos estructurados
+            FORMATTED_ERROR_MESSAGES=""
+            FAILED_INFO="Some tests failed"
+            
+            echo "📋 Reading extracted test failures..."
+            
+            if [ -f "failed-test-details.txt" ]; then
+              DETAILED_ERROR_CONTENT=$(cat failed-test-details.txt 2>/dev/null || echo "")
+              echo "Content found: $DETAILED_ERROR_CONTENT"
+              
+              if [ -n "$DETAILED_ERROR_CONTENT" ] && [ "$DETAILED_ERROR_CONTENT" != "Could not extract test failure details" ]; then
+                # Formatear los mensajes para el issue (cada prueba en su línea)
+                FORMATTED_ERROR_MESSAGES=$(echo "$DETAILED_ERROR_CONTENT" | head -10)
+                FAILED_COUNT=$(echo "$DETAILED_ERROR_CONTENT" | wc -l || echo "1")
+                FAILED_INFO="$FAILED_COUNT pruebas fallaron"
+                echo "📝 Formatted error messages: $FORMATTED_ERROR_MESSAGES"
+              else
+                echo "⚠️ Content is empty or invalid"
+                FORMATTED_ERROR_MESSAGES="Las pruebas fallaron pero no se pudieron extraer detalles específicos"
+              fi
+            else
+              echo "⚠️ failed-test-details.txt not found"
+              FORMATTED_ERROR_MESSAGES="Las pruebas fallaron pero no se pudieron extraer detalles específicos"
+            fi
+            
+            # Si aún no encontramos errores específicos, usar información general mejorada
+            if [ -z "$FORMATTED_ERROR_MESSAGES" ]; then
+              FORMATTED_ERROR_MESSAGES="❌ No se pudieron extraer los nombres específicos de las pruebas"$'\n'"❌ Ejecuta \`dotnet test\` en \`katas/kata-$KATA_NUM\` para ver qué pruebas específicas están fallando"
+              FAILED_INFO="Pruebas fallaron - revisa localmente para más detalles"
+            fi
+            
+            # Crear mensaje detallado del issue usando concatenación con saltos de línea reales
+            ISSUE_BODY="🧪 **Pruebas del Servidor Fallaron** - Tu kata aún no está completa."$'\n\n'"**Estado:** El código compila exitosamente pero falta alguna funcionalidad."$'\n\n'"**Pruebas que Fallaron:**"$'\n'"$FORMATTED_ERROR_MESSAGES"$'\n\n'"**Pasos a seguir:**"$'\n'"1. Analiza los mensajes de error de arriba para entender qué se espera"$'\n'"2. Implementa la funcionalidad faltante para corregir estos problemas específicos"$'\n'"3. Usa el enfoque TDD: haz que una prueba pase a la vez"$'\n'"4. Haz commit y push de tus cambios para reintentar"
+            
+            create_issue_safe "🧪 Kata $KATA_NUM: Pruebas Fallaron" "$ISSUE_BODY"
+          fi

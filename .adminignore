@@ -1,0 +1,16 @@
+# ========================================
+# Archivos SOLO para Instructores
+# NO deben sincronizarse a repos de estudiantes
+# ========================================
+
+# Archivos de configuración administrativa
+.adminignore
+
+# Carpetas administrativas en .github/
+.github/kata-templates/
+.github/server-tests/
+.github/workflows/sync-to-students.yml
+
+# Archivos temporales
+temp_repo/
+student_repos.txt
