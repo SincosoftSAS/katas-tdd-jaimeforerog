@@ -11,7 +11,7 @@ namespace FizzBuzz.Tests
             int numero = 1;
             var generator = new FizzBuzzGenerator();
 
-            string resultado = generator.ValidarNumero(numero);
+            string resultado = generator.GenerarFizzBuzz(numero);
 
             resultado.Should().Be("1");
 
@@ -22,7 +22,7 @@ namespace FizzBuzz.Tests
             int numero = 2;
             var generator = new FizzBuzzGenerator();
 
-            string resultado = generator.ValidarNumero(numero);
+            string resultado = generator.GenerarFizzBuzz(numero);
 
             resultado.Should().Be("1,2");
 
@@ -33,7 +33,7 @@ namespace FizzBuzz.Tests
             int numero = 3;
             var generator = new FizzBuzzGenerator();
 
-            string resultado = generator.ValidarNumero(numero);
+            string resultado = generator.GenerarFizzBuzz(numero);
 
             resultado.Should().Be("1,2,Fizz");
 
@@ -44,7 +44,7 @@ namespace FizzBuzz.Tests
             int numero = 5;
             var generator = new FizzBuzzGenerator();
 
-            string resultado = generator.ValidarNumero(numero);
+            string resultado = generator.GenerarFizzBuzz(numero);
 
             resultado.Should().Be("1,2,Fizz,4,Buzz");
 
@@ -55,9 +55,20 @@ namespace FizzBuzz.Tests
             int numero = 15;
             var generator = new FizzBuzzGenerator();
 
-            string resultado = generator.ValidarNumero(numero);
+            string resultado = generator.GenerarFizzBuzz(numero);
 
             resultado.Should().Be("1,2,Fizz,4,Buzz,Fizz,7,8,Fizz,Buzz,11,Fizz,13,14,FizzBuzz");
+
+        }
+        [Fact]
+        public void Si_EnvioNumeroNegativo_Debe_LanzarExcepcion()
+        {
+            int numero = -1;
+            var generator = new FizzBuzzGenerator();
+
+            Action act = () => generator.GenerarFizzBuzz(numero);
+
+            act.Should().Throw<ArgumentException>();
 
         }
         

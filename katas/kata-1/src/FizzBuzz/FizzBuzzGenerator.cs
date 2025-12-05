@@ -4,9 +4,11 @@ namespace FizzBuzz
 {
     public class FizzBuzzGenerator
     {
-        public string ValidarNumero(int numero)
+        public string GenerarFizzBuzz(int numero)
         {
-          
+            if (numero < 0)
+                throw new ArgumentException("El número no puede ser negativo", nameof(numero));
+
             var resultado = new List<string>();
             for (int i = 1; i <= numero; i++)
             {
