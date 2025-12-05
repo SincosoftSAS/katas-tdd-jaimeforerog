@@ -7,6 +7,7 @@ namespace FizzBuzz
     {
         public string ValidarNumero(int numero)
         {
+           
             return "1";
         }
     }
