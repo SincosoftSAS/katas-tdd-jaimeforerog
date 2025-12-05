@@ -27,7 +27,17 @@ namespace FizzBuzz.Tests
             resultado.Should().Be("1,2");
 
         }
+        [Fact]
+        public void Si_Envio3_Debe_devolver1_2_Fizz( )
+        {
+            int numero = 3;
+            var generator = new FizzBuzzGenerator();
 
+            string resultado = generator.ValidarNumero(numero);
+
+            resultado.Should().Be("1,2,Fizz");
+
+        }
      
     }
 }
