@@ -1,5 +1,4 @@
-using FluentAssertions;
-using Xunit;
+
 
 namespace FizzBuzz
 {
@@ -7,22 +6,23 @@ namespace FizzBuzz
     {
         public string ValidarNumero(int numero)
         {
-            var resultado = "";
+          
+            var resultado = new List<string>();
             for (int i = 1; i <= numero; i++)
             {
-                
+
                 if (i % 15 == 0)
-                    resultado += "FizzBuzz,";
+                    resultado.Add("FizzBuzz");
                 else if (i % 3 == 0)
-                    resultado += "Fizz,";
+                    resultado.Add("Fizz");
                 else if (i % 5 == 0)
-                    resultado += "Buzz,";
+                    resultado.Add("Buzz");
 
                 else
-                    resultado += i.ToString() + ',';
+                    resultado.Add(i.ToString());
             }
 
-            return resultado.TrimEnd(',');
+            return string.Join(",", resultado);
         }
     }
 }
