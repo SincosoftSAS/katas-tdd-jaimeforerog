@@ -49,6 +49,17 @@ namespace FizzBuzz.Tests
             resultado.Should().Be("1,2,Fizz,4,Buzz");
 
         }
+        [Fact]
+        public void Si_Envio15_Debe_devolver1_2_Fizz_4_Buzz_Fizz_7_8_Fizz_Buzz_11_Fizz_13_14_FizzBuzz()
+        {
+            int numero = 15;
+            var generator = new FizzBuzzGenerator();
+
+            string resultado = generator.ValidarNumero(numero);
+
+            resultado.Should().Be("1,2,Fizz,4,Buzz,Fizz,7,8,Fizz,Buzz,11,Fizz,13,14,FizzBuzz");
+
+        }
         
     }
 }
