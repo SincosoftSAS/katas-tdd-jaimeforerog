@@ -3,28 +3,20 @@ using FluentAssertions;
 
 namespace FizzBuzz.Tests
 {
-    public class FizzBuzzGeneratorTests
+    public class FizzBuzzTest
     {
         [Fact]
-        public void Generate_WithOne_ReturnsListWithOne()
+        public void Si_Envio1_Debe_devolver1( )
         {
-            // Arrange & Act
-            var result = FizzBuzzGenerator.Generate(1);
-            
-            // Assert
-            result.Should().HaveCount(1);
-            result[0].Should().Be("1");
+            int numero = 1;
+            var generator = new FizzBuzzGenerator();
+
+            string resultado = generator.ValidarNumero(numero);
+
+            resultado.Should().Be("1");
+
         }
-        
-        [Fact]
-        public void Generate_WithFifteen_ReturnsListWithFizzBuzz()
-        {
-            // Arrange & Act
-            var result = FizzBuzzGenerator.Generate(15);
-            
-            // Assert
-            result.Should().HaveCount(15);
-            result[14].Should().Be("FizzBuzz");
-        }
+
+     
     }
 }
