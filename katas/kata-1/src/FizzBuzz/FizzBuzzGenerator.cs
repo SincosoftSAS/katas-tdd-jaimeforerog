@@ -1,12 +1,24 @@
+using FluentAssertions;
+using Xunit;
+
 namespace FizzBuzz
 {
     public class FizzBuzzGenerator
     {
-        public static List<string> Generate(int count)
+        [Fact]
+        public void Si_Envio1_Debe_devolver1( )
         {
-            // TODO: Implement FizzBuzz logic using TDD
-            // Start with the simplest case that makes the first test pass
-            throw new NotImplementedException("Implement using TDD: Red → Green → Refactor");
+            int numero = 1;
+
+            string resultado=ValidarNumero(numero);
+
+            resultado.Should().Be("1");
+
+        }
+
+        private string ValidarNumero(int numero)
+        {
+            throw new NotImplementedException();
         }
     }
 }
