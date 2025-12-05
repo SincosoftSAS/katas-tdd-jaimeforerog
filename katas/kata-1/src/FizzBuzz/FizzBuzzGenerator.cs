@@ -12,11 +12,13 @@ namespace FizzBuzz
             {
                 if (i % 3 == 0)
                     resultado += "Fizz,";
+                else if (i % 5 == 0)
+                    resultado += "Buzz,";
                 else
-                    resultado += i.ToString()+',';
-
+                    resultado += i.ToString() + ',';
             }
+
             return resultado.TrimEnd(',');
         }
     }
-}  
+}

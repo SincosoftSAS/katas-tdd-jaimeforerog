@@ -41,7 +41,7 @@ namespace FizzBuzz.Tests
         [Fact]
         public void Si_Envio5_Debe_devolver1_2_Fizz_4_Buzz( )
         {
-            int numero = 3;
+            int numero = 5;
             var generator = new FizzBuzzGenerator();
 
             string resultado = generator.ValidarNumero(numero);
