@@ -34,7 +34,7 @@ namespace Calculator.Tests
             result.Should().Be(6);
         }
         [Fact]
-        public void multiply_TwoNumbers_ReturMultiplication()
+        public void multiply_TwoNumbers_ReturnMultiplication()
         {
             // Arrange
             int a = 10;
@@ -46,7 +46,18 @@ namespace Calculator.Tests
             // Assert
             result.Should().Be(40);
         }
+        [Fact]
+        public void divide_TwoNumbers_ReturnDivision(){
+            // Arrange
+            int a = 10;
+            int b = 2;
 
+            // Act
+            int result = _calculator.Divide(a, b);
+
+            // Assert
+            result.Should().Be(5);
+        }
 
         // TODO: Implementa más tests usando TDD
         // Suggestions:
