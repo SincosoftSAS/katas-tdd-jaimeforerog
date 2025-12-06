@@ -8,7 +8,7 @@ namespace FizzBuzz
         private const string PalabraBuzz = "Buzz";
         public const string ElNumeroNoPuedeSerNegativo = "El número no puede ser negativo.";
 
-        public string Generate(int numero)
+        public static IEnumerable<string> Generate(int numero)
         {
             ValidarNumero(numero);
 
@@ -19,16 +19,16 @@ namespace FizzBuzz
                 valoresFizzBuzz.Add(ObtenerValorFizzBuzz(i));
             }
 
-            return string.Join(",", valoresFizzBuzz);
+            return valoresFizzBuzz;
         }
 
-        private void ValidarNumero(int numero)
+        private static void ValidarNumero(int numero)
         {
             if (numero < 0)
-                throw new InvalidOperationException(ElNumeroNoPuedeSerNegativo );
+                throw new InvalidOperationException(ElNumeroNoPuedeSerNegativo);
         }
 
-        private string ObtenerValorFizzBuzz(int numero)
+        private static string ObtenerValorFizzBuzz(int numero)
         {
             var resultado = "";
             if (numero % MultiploFizz == 0) resultado += PalabraFizz;
