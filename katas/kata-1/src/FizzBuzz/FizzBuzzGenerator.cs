@@ -7,6 +7,7 @@ namespace FizzBuzz
         private const string PalabraFizz = "Fizz";
         private const string PalabraBuzz = "Buzz";
         private const string Separador = ",";
+        public const string ElNumeroNoPuedeSerNegativo = "El número no puede ser negativo.";
 
         public string GenerarFizzBuzz(int numero)
         {
@@ -25,7 +26,7 @@ namespace FizzBuzz
         private void ValidarNumero(int numero)
         {
             if (numero < 0)
-                throw new ArgumentException("El número no puede ser negativo", nameof(numero));
+                throw new InvalidOperationException(ElNumeroNoPuedeSerNegativo );
         }
 
         private string ObtenerValorFizzBuzz(int numero)
