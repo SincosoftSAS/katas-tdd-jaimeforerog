@@ -58,6 +58,19 @@ namespace Calculator.Tests
             // Assert
             result.Should().Be(5);
         }
+        [Fact]
+        public void divide_dividedByZero_ReturnExeption(){
+            // Arrange
+            int a = 10;
+            int b = 0;
+
+            // Act
+            Action caller = () =>  _calculator.Divide(a, b);
+
+      
+            caller.Should().ThrowExactly<InvalidOperationException>()
+                .WithMessage("No se puede Dividir en cero.");
+        }
 
         // TODO: Implementa más tests usando TDD
         // Suggestions:
