@@ -5,72 +5,30 @@ namespace FizzBuzz.Tests
 {
     public class FizzBuzzTest
     {
-        [Fact]
-        public void Si_Envio1_Debe_devolver1( )
+        private readonly FizzBuzzGenerator _generator = new();
+
+        [Theory]
+        [InlineData(1, "1")]
+        [InlineData(2, "1,2")]
+        [InlineData(3, "1,2,Fizz")]
+        [InlineData(5, "1,2,Fizz,4,Buzz")]
+        [InlineData(15, "1,2,Fizz,4,Buzz,Fizz,7,8,Fizz,Buzz,11,Fizz,13,14,FizzBuzz")]
+        public void GenerarFizzBuzz_ConNumeroValido_DebeRetornarSecuenciaCorrecta(int numero, string esperado)
         {
-            int numero = 1;
-            var generator = new FizzBuzzGenerator();
+            string resultado = _generator.GenerarFizzBuzz(numero);
 
-            string resultado = generator.GenerarFizzBuzz(numero);
-
-            resultado.Should().Be("1");
-
-        }
-        [Fact]
-        public void Si_Envio2_Debe_devolver1_2( )
-        {
-            int numero = 2;
-            var generator = new FizzBuzzGenerator();
-
-            string resultado = generator.GenerarFizzBuzz(numero);
-
-            resultado.Should().Be("1,2");
-
-        }
-        [Fact]
-        public void Si_Envio3_Debe_devolver1_2_Fizz( )
-        {
-            int numero = 3;
-            var generator = new FizzBuzzGenerator();
-
-            string resultado = generator.GenerarFizzBuzz(numero);
-
-            resultado.Should().Be("1,2,Fizz");
-
-        }
-        [Fact]
-        public void Si_Envio5_Debe_devolver1_2_Fizz_4_Buzz( )
-        {
-            int numero = 5;
-            var generator = new FizzBuzzGenerator();
-
-            string resultado = generator.GenerarFizzBuzz(numero);
-
-            resultado.Should().Be("1,2,Fizz,4,Buzz");
-
-        }
-        [Fact]
-        public void Si_Envio15_Debe_devolver1_2_Fizz_4_Buzz_Fizz_7_8_Fizz_Buzz_11_Fizz_13_14_FizzBuzz()
-        {
-            int numero = 15;
-            var generator = new FizzBuzzGenerator();
-
-            string resultado = generator.GenerarFizzBuzz(numero);
-
-            resultado.Should().Be("1,2,Fizz,4,Buzz,Fizz,7,8,Fizz,Buzz,11,Fizz,13,14,FizzBuzz");
-
+            resultado.Should().Be(esperado);
         }
         [Fact]
         public void Si_EnvioNumeroNegativo_Debe_LanzarExcepcion()
         {
             int numero = -1;
-            var generator = new FizzBuzzGenerator();
 
-            Action act = () => generator.GenerarFizzBuzz(numero);
- 
+            Action act = () => _generator.GenerarFizzBuzz(numero);
+
             act.Should().Throw<ArgumentException>();
 
-            
+
         }
         
     }
