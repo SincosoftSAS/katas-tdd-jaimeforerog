@@ -6,21 +6,20 @@ namespace FizzBuzz
         private const int MultiploBuzz = 5;
         private const string PalabraFizz = "Fizz";
         private const string PalabraBuzz = "Buzz";
-        private const string Separador = ",";
         public const string ElNumeroNoPuedeSerNegativo = "El número no puede ser negativo.";
 
         public string GenerarFizzBuzz(int numero)
         {
             ValidarNumero(numero);
 
-            var valoresFizzBuzz = new List<string>(numero);
+            var valoresFizzBuzz = new List<string>();
 
             for (int i = 1; i <= numero; i++)
             {
                 valoresFizzBuzz.Add(ObtenerValorFizzBuzz(i));
             }
 
-            return string.Join(Separador, valoresFizzBuzz);
+            return string.Join(",", valoresFizzBuzz);
         }
 
         private void ValidarNumero(int numero)
