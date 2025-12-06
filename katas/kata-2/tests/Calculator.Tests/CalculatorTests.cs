@@ -34,7 +34,7 @@ namespace Calculator.Tests
             result.Should().Be(6);
         }
         [Fact]
-        public void multiply_TwoNumbers_ReturnMultiplication()
+        public void Multiply_TwoNumbers_ReturnsProduct()
         {
             // Arrange
             int a = 10;
@@ -47,7 +47,8 @@ namespace Calculator.Tests
             result.Should().Be(40);
         }
         [Fact]
-        public void divide_TwoNumbers_ReturnDivision(){
+        public void Divide_TwoNumbers_ReturnsQuotient()
+        {
             // Arrange
             int a = 10;
             int b = 2;
@@ -59,7 +60,8 @@ namespace Calculator.Tests
             result.Should().Be(5);
         }
         [Fact]
-        public void divide_dividedByZero_ReturnExeption(){
+        public void Divide_ByZero_ThrowsException()
+        {
             // Arrange
             int a = 10;
             int b = 0;
@@ -67,7 +69,8 @@ namespace Calculator.Tests
             // Act
             Action caller = () =>  _calculator.Divide(a, b);
 
-      caller.Should().ThrowExactly<InvalidOperationException>()
+            // Assert
+            caller.Should().ThrowExactly<InvalidOperationException>()
                 .WithMessage("No se puede Dividir en cero.");
         }
 
