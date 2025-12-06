@@ -8,7 +8,7 @@ namespace FizzBuzz
         private const string PalabraBuzz = "Buzz";
         public const string ElNumeroNoPuedeSerNegativo = "El número no puede ser negativo.";
 
-        public static IEnumerable<string> Generate(int numero)
+        public static List<string> Generate(int numero)
         {
             ValidarNumero(numero);
 
