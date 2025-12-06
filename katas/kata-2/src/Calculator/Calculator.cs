@@ -19,7 +19,11 @@ namespace Calculator
 
         public int Divide(int a, int b)
         {
-          
+            if (b == 0)
+            {
+                throw new InvalidOperationException("No se puede Dividir en cero.");
+            }
+
             return a / b;
         }
     }
