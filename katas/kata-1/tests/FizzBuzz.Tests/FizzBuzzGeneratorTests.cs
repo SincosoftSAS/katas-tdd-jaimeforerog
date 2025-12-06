@@ -28,7 +28,8 @@ namespace FizzBuzz.Tests
         public void GenerarFizzBuzz_ConNumeroNegativo_DebeLanzarExcepcion()
         {
             Action act = () => _generator.GenerarFizzBuzz(-1);
-            act.Should().ThrowExactly<InvalidOperationException>().WithMessage("El número no puede ser negativo.");
+            act.Should().ThrowExactly<InvalidOperationException>()
+                .WithMessage(FizzBuzzGenerator.ElNumeroNoPuedeSerNegativo);
         }
     }
 }
