@@ -33,7 +33,20 @@ namespace Calculator.Tests
             // Assert
             result.Should().Be(6);
         }
-    
+        [Fact]
+        public void multiply_TwoNumbers_ReturMultiplication()
+        {
+            // Arrange
+            int a = 10;
+            int b = 4;
+
+            // Act
+            int result = _calculator.Multiply(a, b);
+
+            // Assert
+            result.Should().Be(40);
+        }
+
 
         // TODO: Implementa más tests usando TDD
         // Suggestions:
