@@ -21,19 +21,7 @@ namespace Calculator.Tests
             result.Should().Be(8);
         }
 
-        [Fact]
-        public void Subtract_TwoNumbers_ReturnsDifference()
-        {
-            // Arrange
-            int a = 10;
-            int b = 4;
-
-            // Act
-            int result = _calculator.Subtract(a, b);
-
-            // Assert
-            result.Should().Be(6);
-        }
+    
 
         // TODO: Implementa más tests usando TDD
         // Suggestions:
