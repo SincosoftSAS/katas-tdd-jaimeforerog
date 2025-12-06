@@ -67,9 +67,10 @@ namespace FizzBuzz.Tests
             var generator = new FizzBuzzGenerator();
 
             Action act = () => generator.GenerarFizzBuzz(numero);
-
+ 
             act.Should().Throw<ArgumentException>();
 
+            
         }
         
     }
