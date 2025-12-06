@@ -21,13 +21,13 @@ namespace FizzBuzz.Tests
         [MemberData(nameof(CasosDePruebaFizzBuzz))]
         public void GenerarFizzBuzz_ConNumeroValido_DebeRetornarSecuenciaCorrecta(int numero, string esperado)
         {
-            _generator.GenerarFizzBuzz(numero).Should().Be(esperado);
+            _generator.Generate(numero).Should().Be(esperado);
         }
 
         [Fact]
         public void GenerarFizzBuzz_ConNumeroNegativo_DebeLanzarExcepcion()
         {
-            Action act = () => _generator.GenerarFizzBuzz(-1);
+            Action act = () => _generator.Generate(-1);
             act.Should().ThrowExactly<InvalidOperationException>()
                 .WithMessage(FizzBuzzGenerator.ElNumeroNoPuedeSerNegativo);
         }
