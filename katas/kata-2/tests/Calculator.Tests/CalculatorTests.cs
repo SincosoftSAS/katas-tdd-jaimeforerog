@@ -67,8 +67,7 @@ namespace Calculator.Tests
             // Act
             Action caller = () =>  _calculator.Divide(a, b);
 
-      
-            caller.Should().ThrowExactly<InvalidOperationException>()
+      caller.Should().ThrowExactly<InvalidOperationException>()
                 .WithMessage("No se puede Dividir en cero.");
         }
 
