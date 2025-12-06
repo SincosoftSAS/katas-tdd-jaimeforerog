@@ -7,70 +7,66 @@ namespace Calculator.Tests
     {
         private readonly Calculator _calculator = new();
 
-        [Fact]
-        public void Add_TwoPositiveNumbers_ReturnsSum()
+        [Theory]
+        [InlineData(5, 3, 8)]
+        [InlineData(0, 0, 0)]
+        [InlineData(-5, -3, -8)]
+        [InlineData(10, -3, 7)]
+        public void Add_Numbers_ReturnsSum(int a, int b, int expected)
         {
-            // Arrange
-            int a = 5;
-            int b = 3;
-
             // Act
-            int result = _calculator.Add(a, b);
+            var result = _calculator.Add(a, b);
 
             // Assert
-            result.Should().Be(8);
+            result.Should().Be(expected);
         }
-        [Fact]
-        public void Subtract_TwoNumbers_ReturnsDifference()
+        [Theory]
+        [InlineData(10, 4, 6)]
+        [InlineData(5, 0, 5)]
+        [InlineData(-5, -3, -2)]
+        [InlineData(0, 5, -5)]
+        public void Subtract_Numbers_ReturnsDifference(int a, int b, int expected)
         {
-            // Arrange
-            int a = 10;
-            int b = 4;
-
             // Act
-            int result = _calculator.Subtract(a, b);
+            var result = _calculator.Subtract(a, b);
 
             // Assert
-            result.Should().Be(6);
+            result.Should().Be(expected);
         }
-        [Fact]
-        public void Multiply_TwoNumbers_ReturnsProduct()
+        [Theory]
+        [InlineData(10, 4, 40)]
+        [InlineData(5, 0, 0)]
+        [InlineData(-5, -3, 15)]
+        [InlineData(5, -3, -15)]
+        public void Multiply_Numbers_ReturnsProduct(int a, int b, int expected)
         {
-            // Arrange
-            int a = 10;
-            int b = 4;
-
             // Act
-            int result = _calculator.Multiply(a, b);
+            var result = _calculator.Multiply(a, b);
 
             // Assert
-            result.Should().Be(40);
+            result.Should().Be(expected);
         }
-        [Fact]
-        public void Divide_TwoNumbers_ReturnsQuotient()
+        [Theory]
+        [InlineData(10, 2, 5)]
+        [InlineData(0, 5, 0)]
+        [InlineData(-10, -2, 5)]
+        [InlineData(10, 3, 3)]
+        public void Divide_Numbers_ReturnsQuotient(int a, int b, int expected)
         {
-            // Arrange
-            int a = 10;
-            int b = 2;
-
             // Act
-            int result = _calculator.Divide(a, b);
+            var result = _calculator.Divide(a, b);
 
             // Assert
-            result.Should().Be(5);
+            result.Should().Be(expected);
         }
         [Fact]
         public void Divide_ByZero_ThrowsException()
         {
-            // Arrange
-            int a = 10;
-            int b = 0;
-
             // Act
-            Action caller = () =>  _calculator.Divide(a, b);
+            Action act = () => _calculator.Divide(10, 0);
 
             // Assert
-            caller.Should().ThrowExactly<InvalidOperationException>()
+            act.Should().ThrowExactly<InvalidOperationException>()
                 .WithMessage("No se puede Dividir en cero.");
         }
 
