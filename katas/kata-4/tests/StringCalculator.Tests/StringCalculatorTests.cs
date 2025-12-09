@@ -52,9 +52,13 @@ namespace StringCalculator.Tests
 
             Assert.Equal(2, Calculator.Calculate("2,1001"));
         }
-        
 
-      
+        [Fact]
+        public void Calculate_MultiCharacterDelimiter_ReturnsSum()
+        {
 
+            Assert.Equal(6, Calculator.Calculate("//[***]\n1***2***3"));
+        }
+     
     }
 }
