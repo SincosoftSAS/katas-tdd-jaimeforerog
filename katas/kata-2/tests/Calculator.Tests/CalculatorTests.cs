@@ -49,6 +49,7 @@ namespace Calculator.Tests
         [Theory]
         [InlineData(10, 2, 5)]
         [InlineData(0, 5, 0)]
+        [InlineData(-10, 5, -2)]
        [InlineData(10, 3, 3)]
         public void Divide_Numbers_ReturnsQuotient(int a, int b, int expected)
         {
@@ -58,15 +59,17 @@ namespace Calculator.Tests
             // Assert
             result.Should().Be(expected);
         }
-        [Fact]
-        public void Divide_ByZero_ThrowsException()
+        [Theory]
+        [InlineData(10, 0, "No se puede dividir de 0.")]
+        [InlineData(-10, 0, "No se puede dividir de 0.")]
+        public void Divide_ByZero_ThrowsException(int a, int b, string expected)
         {
             // Act
-            Action act = () => _calculator.Divide(10, 0);
+            Action act = () => _calculator.Divide(a, b);
 
             // Assert
-            act.Should().ThrowExactly<InvalidOperationException>()
-                .WithMessage("No se puede dividir de 0 o numero negativos.");
+            act.Should().ThrowExactly<DivideByZeroException>()
+                .WithMessage(expected);
         }
     }
 }
