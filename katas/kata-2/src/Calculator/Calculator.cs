@@ -1,30 +1,31 @@
+using System.ComponentModel;
+
 namespace Calculator
 {
     public class Calculator
     {
         public int Add(int a, int b)
         {
-            // TODO: Implement using TDD: Red → Green → Refactor
-            throw new NotImplementedException("Implement using TDD: Red → Green → Refactor");
+            return a + b;
+            
         }
 
         public int Subtract(int a, int b)
         {
-            // TODO: Implement using TDD: Red → Green → Refactor
-            throw new NotImplementedException("Implement using TDD: Red → Green → Refactor");
+            return a - b;
         }
 
         public int Multiply(int a, int b)
         {
-            // TODO: Implement using TDD: Red → Green → Refactor
-            throw new NotImplementedException("Implement using TDD: Red → Green → Refactor");
+            return a * b;
+            
         }
 
         public int Divide(int a, int b)
         {
-            // TODO: Implement using TDD: Red → Green → Refactor
-            // Hint: ¿Qué pasa si b es 0?
-            throw new NotImplementedException("Implement using TDD: Red → Green → Refactor");
+            if (b <= 0) 
+                throw new InvalidOperationException("No se puede dividir de 0 o numero negativos.");
+            return a / b;
         }
     }
 }
