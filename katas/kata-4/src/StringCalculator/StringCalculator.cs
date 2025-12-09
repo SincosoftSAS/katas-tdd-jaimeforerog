@@ -31,6 +31,9 @@ namespace StringCalculator
                 }
                 else
                 {
+                    if (number > 1000)
+                        number = 0;
+                    
                     total += number;
                 }
             }
