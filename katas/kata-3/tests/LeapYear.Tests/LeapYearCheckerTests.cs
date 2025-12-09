@@ -33,6 +33,15 @@ namespace LeapYear.Tests
             // Assert
             act.Should().ThrowExactly<ArgumentOutOfRangeException>();
         }
+        [Fact]
+        public void Year_IsMayor4000_throwExceptionn()
+        {
+            
+            Action act = () => LeapYearChecker.IsLeapYear(4000);
+
+            // Assert
+            act.Should().ThrowExactly<ArgumentOutOfRangeException>();
+        }
         
     }
 }
