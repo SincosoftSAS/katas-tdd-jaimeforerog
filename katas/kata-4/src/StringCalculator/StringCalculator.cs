@@ -2,12 +2,26 @@ namespace StringCalculator
 {
     public class Calculator
     {
+        private const int MaxNumber = 1000;
+
         public static int Calculate(string input)
         {
             if (input == "")
                 return 0;
-            
-            
+
+            input = ExtractDelimiter(input);
+
+            input = input.Replace("\n", ",");
+
+            var values = input.Split(',');
+            var numbers = ParseNumbers(values);
+            ValidateNoNegatives(numbers);
+
+            return SumValidNumbers(numbers);
+        }
+
+        private static string ExtractDelimiter(string input)
+        {
             if (input.StartsWith("//"))
             {
                 var delimiterEndIndex = input.IndexOf('\n');
@@ -27,35 +41,36 @@ namespace StringCalculator
                 input = input.Replace(delimiter, ",");
             }
 
-            input = input.Replace("\n", ",");
+            return input;
+        }
 
-            var values = input.Split(',');
-            var negatives = new List<int>();
-            var total = 0;
+        private static int SumValidNumbers(List<int> numbers)
+        {
+            return numbers
+                .Where(n => n >= 0)
+                .Select(n => n > MaxNumber ? 0 : n)
+                .Sum();
+        }
 
-            foreach (var value in values)
-            {
-                var number = int.Parse(value);
-                if (number < 0)
-                {
-                    negatives.Add(number);
-                }
-                else
-                {
-                    if (number > 1000)
-                        number = 0;
-                    
-                    total += number;
-                }
-            }
-
+        private static void ValidateNoNegatives(List<int> numbers)
+        {
+            var negatives = numbers.Where(n => n < 0).ToList();
             if (negatives.Count > 0)
             {
                 var negativesString = string.Join(",", negatives);
                 throw new ArgumentOutOfRangeException(null, $"Negativos no permitidos {negativesString}");
             }
+        }
 
-            return total;
+        private static List<int> ParseNumbers(string[] values)
+        {
+            var numbers = new List<int>();
+            foreach (var value in values)
+            {
+                numbers.Add(int.Parse(value));
+            }
+
+            return numbers;
         }
     }
 }
