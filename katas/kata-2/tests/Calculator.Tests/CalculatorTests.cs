@@ -34,11 +34,6 @@ namespace Calculator.Tests
             // Assert
             result.Should().Be(6);
         }
-
-        // TODO: Implementa más tests usando TDD
-        // Suggestions:
-        // - Test multiply with positive numbers
-        // - Test divide with positive numbers  
-        // - Test edge cases (division by zero, negative numbers, etc.)
+        
     }
 }
