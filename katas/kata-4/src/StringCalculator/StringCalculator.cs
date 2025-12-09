@@ -6,6 +6,8 @@ namespace StringCalculator
         {
             if (input == "")
                 return 0;
+            
+           input = input.Replace("\n", ",");
            
             var values = input.Split(',');
             var total = 0;
