@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bea9e1bc-b2fd-4d33-a1ff-0471b15e0355" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../kata-4/.idea/.idea.Kata4/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kata-4/.idea/.idea.Kata4/.idea/indexLayout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../kata-4/.idea/.idea.Kata4/.idea/vcs.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;jaimeforerog&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/SincosoftSAS/katas-tdd-jaimeforerog.git&quot;,
+    &quot;accountId&quot;: &quot;51d405d6-da77-4c15-832f-62a684165fdf&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://C:/Users/jaime.forero/RiderProjects/levelUp1/katas-tdd-jaimeforerog/katas/kata-3/src/LeapYear/LeapYearChecker.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/jaime.forero/RiderProjects/levelUp1/katas-tdd-jaimeforerog/katas/kata-3/src/LeapYear/LeapYearChecker.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/jaime.forero/RiderProjects/levelUp1/katas-tdd-jaimeforerog/katas/kata-3/src/LeapYear/LeapYearChecker.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/jaime.forero/RiderProjects/levelUp1/katas-tdd-jaimeforerog/katas/kata-3/tests/LeapYear.Tests/LeapYearCheckerTests.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="36TU11pcdSrjgViGzExa4TFnOgf" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager" selected="780e2140-1a17-4629-ac8f-b5df74981ba7" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bea9e1bc-b2fd-4d33-a1ff-0471b15e0355" name="Changes" comment="" />
+      <created>1765029836110</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1765029836110</updated>
+      <workItem from="1765029837625" duration="4248000" />
+      <workItem from="1765289165484" duration="1103000" />
+      <workItem from="1765290414936" duration="5623000" />
+      <workItem from="1765300302584" duration="4258000" />
+    </task>
+    <task id="LOCAL-00001" summary="🔴Add_TwoPositiveNumbers_ReturnsSum">
+      <option name="closed" value="true" />
+      <created>1765034701163</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1765034701163</updated>
+    </task>
+    <task id="LOCAL-00002" summary="🟢 Add_TwoPositiveNumbers_ReturnsSum">
+      <option name="closed" value="true" />
+      <created>1765034803764</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1765034803764</updated>
+    </task>
+    <task id="LOCAL-00003" summary="🔴 Subtract_TwoNumbers_ReturnsDifference">
+      <option name="closed" value="true" />
+      <created>1765034888602</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1765034888602</updated>
+    </task>
+    <task id="LOCAL-00004" summary="🟢Subtract_TwoNumbers_ReturnsDifference">
+      <option name="closed" value="true" />
+      <created>1765034939742</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1765034939742</updated>
+    </task>
+    <task id="LOCAL-00005" summary="🔴multiply_TwoNumbers_ReturMultiplication">
+      <option name="closed" value="true" />
+      <created>1765035222139</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1765035222139</updated>
+    </task>
+    <task id="LOCAL-00006" summary="🟢 multiply_TwoNumbers_ReturMultiplication">
+      <option name="closed" value="true" />
+      <created>1765035285670</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1765035285670</updated>
+    </task>
+    <task id="LOCAL-00007" summary=".🔴divide_TwoNumbers_ReturnDivision">
+      <option name="closed" value="true" />
+      <created>1765035568785</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1765035568785</updated>
+    </task>
+    <task id="LOCAL-00008" summary="🟢 divide_TwoNumbers_ReturnDivision">
+      <option name="closed" value="true" />
+      <created>1765035611595</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1765035611595</updated>
+    </task>
+    <task id="LOCAL-00009" summary="🔴divide_dividedByZero_ReturnExeption">
+      <option name="closed" value="true" />
+      <created>1765036294130</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1765036294130</updated>
+    </task>
+    <task id="LOCAL-00010" summary="🟢 divide_dividedByZero_ReturnExeption">
+      <option name="closed" value="true" />
+      <created>1765036368542</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1765036368542</updated>
+    </task>
+    <task id="LOCAL-00011" summary="🟢 divide_dividedByZero_ReturnExeption">
+      <option name="closed" value="true" />
+      <created>1765036398105</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1765036398105</updated>
+    </task>
+    <task id="LOCAL-00012" summary="🟦 nombres de test">
+      <option name="closed" value="true" />
+      <created>1765037114158</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1765037114158</updated>
+    </task>
+    <task id="LOCAL-00013" summary="🟦 refactor Refactorizar para eliminar duplicación en la inicialización de variables en los tests">
+      <option name="closed" value="true" />
+      <created>1765037640638</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1765037640638</updated>
+    </task>
+    <task id="LOCAL-00014" summary="prueba commit">
+      <option name="closed" value="true" />
+      <created>1765289305979</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1765289305979</updated>
+    </task>
+    <task id="LOCAL-00015" summary="montaje con ajustes">
+      <option name="closed" value="true" />
+      <created>1765292667260</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1765292667260</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Divide_Numbers_ReturnsQuotient">
+      <option name="closed" value="true" />
+      <created>1765293964000</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1765293964000</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ID_WIDTH">
+                <map>
+                  <entry key="Table.Default.Author.ColumnIdWidth" value="68" />
+                  <entry key="Table.Default.Date.ColumnIdWidth" value="65" />
+                  <entry key="Table.GitHub.CommitStatus.ColumnIdWidth" value="32" />
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Add_TwoPositiveNumbers_ReturnsSum" />
+    <MESSAGE value=" Add_TwoPositiveNumbers_ReturnsSum" />
+    <MESSAGE value=" Subtract_TwoNumbers_ReturnsDifference" />
+    <MESSAGE value="Subtract_TwoNumbers_ReturnsDifference" />
+    <MESSAGE value="multiply_TwoNumbers_ReturMultiplication" />
+    <MESSAGE value=" multiply_TwoNumbers_ReturMultiplication" />
+    <MESSAGE value=".divide_TwoNumbers_ReturnDivision" />
+    <MESSAGE value=" divide_TwoNumbers_ReturnDivision" />
+    <MESSAGE value="divide_dividedByZero_ReturnExeption" />
+    <MESSAGE value=" divide_dividedByZero_ReturnExeption" />
+    <MESSAGE value=" nombres de test" />
+    <MESSAGE value=" refactor Refactorizar para eliminar duplicación en la inicialización de variables en los tests" />
+    <MESSAGE value="prueba commit" />
+    <MESSAGE value="montaje con ajustes" />
+    <MESSAGE value="Divide_Numbers_ReturnsQuotient" />
+    <option name="LAST_COMMIT_MESSAGE" value="Divide_Numbers_ReturnsQuotient" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="3" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
