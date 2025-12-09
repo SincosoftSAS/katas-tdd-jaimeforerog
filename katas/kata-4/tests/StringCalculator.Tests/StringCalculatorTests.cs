@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Xunit;
 
 namespace StringCalculator.Tests
@@ -37,6 +38,23 @@ namespace StringCalculator.Tests
 
             Assert.Equal(3, Calculator.Calculate("//;\n1;2"));
         }
+        [Fact]
+        public void Calculate_NegativeNumber_ReturnsException()
+        {
+
+            var caller = () => Calculator.Calculate("1,-2,3,-4");
+           
+            caller.Should().ThrowExactly<ArgumentOutOfRangeException>().WithMessage("Negativos no permitidos -2,-4");
+        }
+        [Fact]
+        public void Calculate_NumberMayor1000_ReturnSumNumberMenor()
+        {
+
+            Assert.Equal(2, Calculator.Calculate("2,1001"));
+        }
+        
+
+      
 
     }
 }
