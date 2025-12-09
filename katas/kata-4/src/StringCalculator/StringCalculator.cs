@@ -6,12 +6,12 @@ namespace StringCalculator
         {
             if (input == "")
                 return 0;
-            
-           input = input.Replace("\n", ",");
-           
+
+            input = input.Replace("\n", ",");
+
             var values = input.Split(',');
             var total = 0;
-            
+
             foreach (var value in values)
             {
                 total += int.Parse(value);
