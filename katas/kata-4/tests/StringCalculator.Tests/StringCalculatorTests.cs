@@ -18,5 +18,19 @@ namespace StringCalculator.Tests
             
             Assert.Equal(3, Calculator.Calculate("1,2"));
         }
+        [Fact]
+        public void Calculate_fiveNumbers_ReturnsSum()
+        {
+            
+            Assert.Equal(15, Calculator.Calculate("1,2,3,4,5"));
+        }
+        [Fact]
+        public void Calculate_NumbersAndSpace_ReturnsSum()
+        {
+            
+            Assert.Equal(6, Calculator.Calculate("1\n2,3"));
+        }
+        
+       
     }
 }
