@@ -4,27 +4,27 @@ namespace Calculator
     {
         public int Add(int a, int b)
         {
-            return a + b;
+            // TODO: Implement using TDD: Red → Green → Refactor
+            throw new NotImplementedException("Implement using TDD: Red → Green → Refactor");
         }
 
         public int Subtract(int a, int b)
         {
-            return a - b;
+            // TODO: Implement using TDD: Red → Green → Refactor
+            throw new NotImplementedException("Implement using TDD: Red → Green → Refactor");
         }
 
         public int Multiply(int a, int b)
         {
-            return a * b;
+            // TODO: Implement using TDD: Red → Green → Refactor
+            throw new NotImplementedException("Implement using TDD: Red → Green → Refactor");
         }
 
         public int Divide(int a, int b)
         {
-            if (b == 0)
-            {
-                throw new InvalidOperationException("No se puede Dividir en cero.");
-            }
-
-            return a / b;
+            // TODO: Implement using TDD: Red → Green → Refactor
+            // Hint: ¿Qué pasa si b es 0?
+            throw new NotImplementedException("Implement using TDD: Red → Green → Refactor");
         }
     }
 }
